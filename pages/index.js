@@ -57,12 +57,18 @@ export default function Home() {
         }
       });
 
+      if (!_messageHash) {
+        window.alert('Cross chain message not found, please switch wallet network to source chain.');
+        throw new Error('Cross chain message not found, please switch wallet network to source chain.');
+      }
+
       for (let i=0; i<100; i++) {
         // wait 5 seconds 
         await new Promise((resolve) => setTimeout(resolve, 5000));
         try {
           console.log('fetching attestation...');
           let att = await fetch('https://iris-api.circle.com/attestations/' + _messageHash);
+          console.log('att', att);
           att = await att.json();
           console.log('att', att);
           if (att.status !== 'complete') {
