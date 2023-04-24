@@ -41,6 +41,10 @@ export default function Home() {
       const web3 = wallet.web3;
       let ret = await web3.eth.getTransactionReceipt(txhash);
       console.log('ret', ret);
+      if (!ret) {
+        window.alert('Transaction not found, please switch wallet network to correct source chain.');
+        throw new Error('Transaction not found, please switch wallet network to correct source chain.');
+      }
       const iface = new ethers.Interface(TokenMessagerAbi);
       let _messageHash;
       let _attestation;
