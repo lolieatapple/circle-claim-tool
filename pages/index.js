@@ -57,7 +57,7 @@ export default function Home() {
         }
       });
 
-      for (let i=0; i<2; i++) {
+      for (let i=0; i<100; i++) {
         // wait 5 seconds 
         await new Promise((resolve) => setTimeout(resolve, 5000));
         try {
@@ -187,11 +187,11 @@ export default function Home() {
           <h2>Manually process missed cross-chain txs with TX Hash</h2>
           <br/>
           <p>
-          1. Please switch your wallet network to the initiating chain of the USDC cross-chain transfer, enter the txHash, and click on the "Search" button.
+          1. Please switch your wallet network to the initiating chain of the USDC cross-chain transfer, enter the txHash, and click on the Search button.
           </p>
           <br />
           <p>
-          2. Once you have located the transaction record, please switch your wallet network to the target chain of the USDC cross-chain transfer, and click on the "Claim" button.
+          2. Once you have located the transaction record, please switch your wallet network to the target chain of the USDC cross-chain transfer, and click on the Claim button.
           </p>
           <div style={{ display: "flex", alignItems: "center", margin: '40px 0 0 0' }}>
             <input
