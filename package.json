@@ -9,10 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@walletconnect/web3-provider": "^1.8.0",
+    "@wandevs/web3modal": "^1.17.0-beta.0",
+    "@web3-react-wan/wanwallet-connector": "^6.1.19",
     "eslint": "8.37.0",
     "eslint-config-next": "13.3.0",
+    "ethers": "^6.3.0",
+    "hox": "1",
     "next": "13.3.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "web3": "^1.9.0"
   }
 }
