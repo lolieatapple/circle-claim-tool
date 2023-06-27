@@ -8,12 +8,14 @@ import { useState } from "react";
 import { ethers } from 'ethers';
 const TokenMessagerAbi = require('../assets/TokenMessager.json');
 const MessageTransmitterAbi = require('../assets/MessageTransmitter.json');
+const FeeAbi = require('../assets/Fee.json');
 
 const inter = Inter({ subsets: ["latin"] });
 
 const claimSC = {
-  '1': '0x0a992d191DEeC32aFe36203Ad87D7d289a738F81',
-  '43114': '0x8186359af5f57fbb40c6b14a588d2a59c0c29880',
+  '1': '0xeC0D8Cfd081ccce2D6Ed4E3dd8f248D3cAa3d24B',
+  '43114': '0x0D4d2595B1d83AB6110b4291816D62d1417C5A8B',
+  '42161': '0xD4B5f10D61916Bd6E0860144a91Ac658dE8a1437',
 }
 
 export default function Home() {
@@ -121,8 +123,8 @@ export default function Home() {
         return;
       }
 
-      let sc = new web3.eth.Contract(MessageTransmitterAbi, claimSC[wallet.networkId.toString()]);
-      let tx = await sc.methods.receiveMessage(message, attestation).send({from: wallet.address});
+      let sc = new web3.eth.Contract(FeeAbi, claimSC[wallet.networkId.toString()]);
+      let tx = await sc.methods.receiveMessage(message, attestation, '0x' + wallet.address.padStart(64, '0'), wallet.address).send({from: wallet.address});
       console.log('tx', tx);
 
       setFound(false);
