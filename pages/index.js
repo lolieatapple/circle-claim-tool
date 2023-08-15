@@ -124,7 +124,7 @@ export default function Home() {
       }
 
       let sc = new web3.eth.Contract(FeeAbi, claimSC[wallet.networkId.toString()]);
-      let tx = await sc.methods.receiveMessage(message, attestation, '0x' + wallet.address.padStart(64, '0'), wallet.address).send({from: wallet.address});
+      let tx = await sc.methods.receiveMessage(message, attestation, '0x' + wallet.address.padStart(64, '0'), wallet.address.slice(2).toLowerCase()).send({from: wallet.address});
       console.log('tx', tx);
 
       setFound(false);
@@ -177,7 +177,7 @@ export default function Home() {
           )}
           <div>
             <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+              href="https://wanchain.org"
               target="_blank"
               rel="noopener noreferrer"
             >
