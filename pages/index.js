@@ -14,6 +14,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 const claimSC = {
   '1': '0xeC0D8Cfd081ccce2D6Ed4E3dd8f248D3cAa3d24B',
+  '10': '0x592dE30Bebff484B5a43A6E8E3ec1a814902E0b6',
   '43114': '0x0D4d2595B1d83AB6110b4291816D62d1417C5A8B',
   '42161': '0xD4B5f10D61916Bd6E0860144a91Ac658dE8a1437',
 }
