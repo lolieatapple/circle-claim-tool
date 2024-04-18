@@ -6,6 +6,7 @@ import Wallet from "../components/Wallet";
 import useWallet from "../hooks/useWallet";
 import { useState } from "react";
 import { ethers } from 'ethers';
+import { checkATA, createATA, solanaClaim } from "@/components/solana";
 const TokenMessagerAbi = require('../assets/TokenMessager.json');
 const MessageTransmitterAbi = require('../assets/MessageTransmitter.json');
 const FeeAbi = require('../assets/Fee.json');
@@ -29,6 +30,9 @@ export default function Home() {
   const [amount, setAmount] = useState('');
   const [message, setMessage] = useState('');
   const [attestation, setAttestation] = useState('');
+  const [isSolana, setIsSolana] = useState(false);
+  const [solanaAddress, setSolanaAddress] = useState('');
+  const [ataAddress, setAtaAddress] = useState('');
 
   const search = async () => {
     if (!wallet.connected) {
@@ -63,6 +67,14 @@ export default function Home() {
         if (decoded && decoded.name === 'MessageSent') {
           _messageHash = ethers.keccak256(decoded.args.message);
           setMessage(decoded.args.message);
+        }
+
+        if (decoded && decoded.name === 'DepositForBurn') {
+          let domain = Number(decoded.args.destinationDomain);
+          console.log('domain', domain);
+          if (domain === 5) {
+            setIsSolana(true);
+          }
         }
       });
 
@@ -206,8 +218,9 @@ export default function Home() {
           </p>
           <br />
           <p>
-          2. Once you have located the transaction record, please switch your wallet network to the target chain of the USDC cross-chain transfer, and click on the Claim button.
+          2. For Evm chains, Once you have located the transaction record, please switch your wallet network to the target chain of the USDC cross-chain transfer, and click on the Claim button.
           </p>
+          <br />
           <div style={{ display: "flex", alignItems: "center", margin: '40px 0 0 0' }}>
             <input
               type="text"
@@ -224,33 +237,108 @@ export default function Home() {
                 setTxhash(e.target.value);
               }}
             />
-            <button
-              type="submit"
-              style={{
-                padding: "10px",
-                backgroundColor: "#007bff",
-                borderRadius: "0 5px 5px 0",
-                border: "none",
-                color: "#fff",
-              }}
-              onClick={async () => {
-                if (!found) {
-                  await search();
-                } else {
-                  await claim();
+            {
+              !isSolana && <button
+                type="submit"
+                style={{
+                  padding: "10px",
+                  backgroundColor: "#007bff",
+                  borderRadius: "0 5px 5px 0",
+                  border: "none",
+                  color: "#fff",
+                }}
+                onClick={async () => {
+                  if (!found) {
+                    await search();
+                  } else {
+                    await claim();
+                  }
+                }}
+              >
+                {
+                  loading ? 'Waiting...' : (found ? 'Claim' :'Search')
                 }
-              }}
-            >
-              {
-                loading ? 'Waiting...' : (found ? 'Claim' :'Search')
-              }
-            </button>
+              </button>
+            }
+            
           </div>
           <br />
           {
             found && (<p>Found 1 tx with amount: {amount} USDC, message: {message.slice(0, 4)}...{message.slice(-4)}, attestation: {attestation.slice(0, 4)}...{attestation.slice(-4)}</p>)
           }
-          
+          {
+            isSolana && !attestation && <div>Fetching CCTP attestation...</div>
+          }
+          <br />
+          {
+            isSolana && attestation && <div>
+              Please fill your destination Solana recipient address and click Check button:
+              <br />
+              <input style={{
+                padding: "10px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+                width: "100%",
+                margin: '10px 0'
+              
+              }} type="text" placeholder="Solana Receipent Wallet Address" value={solanaAddress} onChange={e=>setSolanaAddress(e.target.value)} />
+              {
+                !ataAddress && <button style={{
+                  padding: "10px",
+                  backgroundColor: "#007bff",
+                  borderRadius: "5px",
+                  border: "none",
+                  color: "#fff",
+                }} onClick={async ()=>{
+                  setLoading(true);
+                  try {
+                    let ata = await checkATA(solanaAddress);
+                    console.log('ret', ata);
+                    if (!ata.status) {
+                      let ok = window.confirm('USDC Associated Token Address is not found, do you want create it now?');
+                      console.log('ok', ok);
+                      if (ok) {
+                        let ret = await createATA(solanaAddress, ata.ata);
+                        setAtaAddress(ata.ata);
+                      }
+                    } else {
+                      setAtaAddress(ata.ata);
+                    }
+                  } catch (error) {
+                    console.error(error);
+                  }
+                  
+                  setLoading(false);
+                }}>
+                  {loading ? 'Waiting...' : 'Check USDC Associated Token Address (ATA)'}
+                </button>
+              }
+              {
+                ataAddress && <button style={{
+                  padding: "10px",
+                  backgroundColor: "#007bff",
+                  borderRadius: "5px",
+                  border: "none",
+                  color: "#fff",
+                }} onClick={async ()=>{
+                  setLoading(true);
+                  try {
+                    let txHash = await solanaClaim(attestation, message, ataAddress, solanaAddress);
+                    console.log('txHash', txHash);
+                    window.alert('Claim success, tx hash: ' + txHash);
+                  } catch (error) {
+                    console.error(error);
+                  }
+                  
+                  setLoading(false);
+                }}>
+                  {loading ? 'Waiting...' : 'Claim'}
+                </button>
+              }
+              
+            
+            </div>
+          }
           </div>
           
         </div>

@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@coral-xyz/anchor": "^0.29.0",
+    "@solana/spl-token": "^0.4.3",
+    "@solana/web3.js": "^1.91.5",
     "@walletconnect/web3-provider": "^1.8.0",
     "@wandevs/web3modal": "^1.17.0-beta.0",
     "@web3-react-wan/wanwallet-connector": "^6.1.19",
