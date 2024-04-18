@@ -55,8 +55,9 @@ async function sendTransaction(instructions, payer) {
   let messageV0 = new TransactionMessage({payerKey: payer, recentBlockhash: recentBlockHash.blockhash, instructions}).compileToV0Message();
   let tx = new VersionedTransaction(messageV0);
   console.log('tx', tx);
-  let signedTx = await provider.signTransaction(tx);
-  let signature = await connection.sendRawTransaction(signedTx.serialize(),  { skipPreflight: true });
+  let signature = await provider.signAndSendTransaction(tx);
+  // let signedTx = await provider.signTransaction(tx);
+  // let signature = await connection.sendRawTransaction(signedTx.serialize(),  { skipPreflight: true });
   console.log('send tx', signature);
   return signature;
 }
