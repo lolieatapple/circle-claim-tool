@@ -373,7 +373,51 @@ export default function Home() {
           </div>
           <br />
           {
-            found && (<p>Found 1 tx with amount: {amount} USDC, message: {message.slice(0, 4)}...{message.slice(-4)}, attestation: {attestation.slice(0, 4)}...{attestation.slice(-4)}</p>)
+            found && (
+              <div>
+                <p>Found 1 tx with amount: {amount} USDC</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
+                  <span>Message: {message.slice(0, 6)}...{message.slice(-6)}</span>
+                  <button
+                    style={{
+                      padding: '5px 10px',
+                      backgroundColor: '#28a745',
+                      border: 'none',
+                      borderRadius: '3px',
+                      color: '#fff',
+                      cursor: 'pointer',
+                      fontSize: '12px'
+                    }}
+                    onClick={() => {
+                      navigator.clipboard.writeText(message);
+                      alert('Message copied to clipboard!');
+                    }}
+                  >
+                    Copy Message
+                  </button>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
+                  <span>Attestation: {attestation.slice(0, 6)}...{attestation.slice(-6)}</span>
+                  <button
+                    style={{
+                      padding: '5px 10px',
+                      backgroundColor: '#28a745',
+                      border: 'none',
+                      borderRadius: '3px',
+                      color: '#fff',
+                      cursor: 'pointer',
+                      fontSize: '12px'
+                    }}
+                    onClick={() => {
+                      navigator.clipboard.writeText(attestation);
+                      alert('Attestation copied to clipboard!');
+                    }}
+                  >
+                    Copy Attestation
+                  </button>
+                </div>
+              </div>
+            )
           }
           {
             isSolana && !attestation && <div>Fetching CCTP attestation...</div>
