@@ -155,7 +155,7 @@ export default function Home() {
         await new Promise((resolve) => setTimeout(resolve, 5000));
         try {
           console.log('fetching attestation...');
-          let att = await fetch('https://iris-api-sandbox.circle.com/attestations/' + _messageHash);
+          let att = await fetch('https://iris-api.circle.com/attestations/' + _messageHash);
           console.log('att', att);
           att = await att.json();
           console.log('att', att);
@@ -170,7 +170,7 @@ export default function Home() {
               sourceDomain = 0; // Default to Ethereum
             }
             console.log('Using source domain:', sourceDomain, 'for chainId:', wallet.networkId);
-            let attV2 = await fetch('https://iris-api-sandbox.circle.com/v2/messages/' + sourceDomain + '?transactionHash=' + txhash);
+            let attV2 = await fetch('https://iris-api.circle.com/v2/messages/' + sourceDomain + '?transactionHash=' + txhash);
             console.log('attV2', attV2);
             attV2 = await attV2.json();
             console.log('attV2', attV2);
